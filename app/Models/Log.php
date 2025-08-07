@@ -11,6 +11,6 @@ class Log extends Model
         'longitude',
         'radius',
         'distance',
-        'is_near'
+        'within_range',
     ];
 }

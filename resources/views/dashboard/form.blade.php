@@ -21,6 +21,19 @@
             @csrf
             <h2 class="text-white text-2xl font-bold mb-6 text-center">Check Delivery Proximity</h2>
 
+            {{-- Show result alert if available --}}
+            @isset($proximityCheck)
+                @if ($proximityCheck->within_range)
+                    <p class="text-green-400 font-semibold mb-4">
+                        ✅ Delivery is within {{ $proximityCheck->distance }} meters!
+                    </p>
+                @else
+                    <p class="text-red-400 font-semibold mb-4">
+                        ⚠️ Delivery is {{ $proximityCheck->distance }} meters away.
+                    </p>
+                @endif
+            @endisset
+
             <div class="mb-4">
                 <label class="block text-white font-semibold mb-1" for="latitude">Delivery Latitude:</label>
                 <input type="text" id="latitude" name="latitude"
@@ -57,6 +70,5 @@
         </div>
     </div>
 </div>
-
 
 @endsection

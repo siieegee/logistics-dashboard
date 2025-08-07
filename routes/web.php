@@ -10,4 +10,5 @@ Route::get('/', function () {
 Route::get('/proximity-form', function () {
     return view('dashboard.form');
 })->name('proximity.form');
+
 Route::post('/check-proximity', [ProximityAlertController::class, 'checkProximity'])->name('check.proximity');

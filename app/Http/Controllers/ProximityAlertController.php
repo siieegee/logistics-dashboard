@@ -10,37 +10,78 @@ class ProximityAlertController extends Controller
 {
     public function checkProximity(Request $request)
     {
-        // Validate input
         $request->validate([
             'latitude' => 'required|numeric',
             'longitude' => 'required|numeric',
             'radius' => 'nullable|numeric',
         ]);
 
-        // Get input values
         $latitude = $request->latitude;
         $longitude = $request->longitude;
         $radius = $request->radius ?? 250;
 
-        // Call Flask API
-        $response = Http::post('https://your-flask-api-url/check_proximity', [
-            'warehouse' => [14.5995, 120.9842],
-            'delivery' => [$latitude, $longitude],
-            'radius' => $radius
-        ]);
+        try {
+            $response = Http::timeout(30)->post(
+                env('FLASK_PROXIMITY_API') . '/check_proximity',
+                [
+                    'warehouse' => [14.5995, 120.9842],
+                    'delivery' => [$latitude, $longitude],
+                    'radius' => $radius
+                ]
+            );
 
-        // Get response JSON
-        $data = $response->json();
+            if ($response->successful()) {
+                $data = $response->json();
 
-        // Save to database
-        Log::create([
+                $log = Log::create([
+                    'latitude' => $latitude,
+                    'longitude' => $longitude,
+                    'radius' => $radius,
+                    'distance' => $data['distance'] ?? 0,
+                    'within_range' => $data['within_range'] ?? false,
+                ]);
+
+                return view('dashboard.alerts', ['proximityCheck' => $log]);
+            } else {
+                // Fallback to local calculation on non-200 response
+                return $this->fallbackLocalCalculation($latitude, $longitude, $radius);
+            }
+        } catch (\Exception $e) {
+            // Fallback to local calculation on exception
+            return $this->fallbackLocalCalculation($latitude, $longitude, $radius);
+        }
+    }
+
+    /**
+     * Fallback method to calculate proximity using local Haversine formula
+     */
+    private function fallbackLocalCalculation($latitude, $longitude, $radius)
+    {
+        $warehouseLat = 14.5995;
+        $warehouseLng = 120.9842;
+
+        $earthRadius = 6371000; // meters
+
+        $dLat = deg2rad($latitude - $warehouseLat);
+        $dLng = deg2rad($longitude - $warehouseLng);
+
+        $a = sin($dLat / 2) * sin($dLat / 2) +
+             cos(deg2rad($warehouseLat)) * cos(deg2rad($latitude)) *
+             sin($dLng / 2) * sin($dLng / 2);
+
+        $c = 2 * atan2(sqrt($a), sqrt(1 - $a));
+        $distance = $earthRadius * $c;
+
+        $withinRange = $distance <= $radius;
+
+        $log = Log::create([
             'latitude' => $latitude,
             'longitude' => $longitude,
             'radius' => $radius,
-            'distance' => $data['distance'] ?? null,
-            'within_range' => $data['within_range'] ?? null,
+            'distance' => round($distance, 2),
+            'within_range' => $withinRange,
         ]);
 
-        return view('dashboard.alerts', ['data' => $data]);
+        return view('dashboard.alerts', ['proximityCheck' => $log]);
     }
 }
