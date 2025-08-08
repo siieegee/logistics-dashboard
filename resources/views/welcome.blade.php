@@ -3,7 +3,7 @@
 @section('content')
 <div class="flex flex-col md:flex-row items-stretch bg-[#264653] p-6 md:p-12 min-h-[600px]">
     <!-- Left Content -->
-    <div class="md:w-1/2 flex flex-col justify-center items-center text-center md:items-start md:text-left px-4 md:px-8">
+    <div class="md:w-1/2 flex flex-col justify-center items-center text-center md:items-start md:text-left px-4 md:px-8 ml-10">
         <h1 class="text-4xl md:text-6xl font-extrabold text-white leading-tight mb-6">
             AI-Powered <span style="color: #6a994e;"><br>
             Proximity Alerts</span><br>
