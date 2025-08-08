@@ -1,6 +1,4 @@
-<div class="mb-4">
-    <div id="map" style="height: 450px;"></div>
-</div>
+<div id="map" style="width: 100%; height: 100%; min-height: 450px; "></div>
 
 @push('scripts')
 <script>

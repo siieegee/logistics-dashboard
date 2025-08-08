@@ -20,11 +20,15 @@ class ProximityAlertController extends Controller
         $longitude = $request->longitude;
         $radius = $request->radius ?? 250;
 
+        // Fixed warehouse location (can be moved to config)
+        $warehouseLat = 14.5995;
+        $warehouseLng = 120.9842;
+
         try {
             $response = Http::timeout(30)->post(
                 env('FLASK_PROXIMITY_API') . '/check_proximity',
                 [
-                    'warehouse' => [14.5995, 120.9842],
+                    'warehouse' => [$warehouseLat, $warehouseLng],
                     'delivery' => [$latitude, $longitude],
                     'radius' => $radius
                 ]
@@ -41,33 +45,32 @@ class ProximityAlertController extends Controller
                     'within_range' => $data['within_range'] ?? false,
                 ]);
 
-                return view('dashboard.alerts', ['proximityCheck' => $log]);
+                return view('dashboard.alerts', [
+                    'proximityCheck' => $log,
+                    'warehouseLat' => $warehouseLat,
+                    'warehouseLng' => $warehouseLng,
+                    'deliveryLat' => $latitude,
+                    'deliveryLng' => $longitude,
+                    'radius' => $radius
+                ]);
             } else {
-                // Fallback to local calculation on non-200 response
-                return $this->fallbackLocalCalculation($latitude, $longitude, $radius);
+                return $this->fallbackLocalCalculation($latitude, $longitude, $radius, $warehouseLat, $warehouseLng);
             }
         } catch (\Exception $e) {
-            // Fallback to local calculation on exception
-            return $this->fallbackLocalCalculation($latitude, $longitude, $radius);
+            return $this->fallbackLocalCalculation($latitude, $longitude, $radius, $warehouseLat, $warehouseLng);
         }
     }
 
-    /**
-     * Fallback method to calculate proximity using local Haversine formula
-     */
-    private function fallbackLocalCalculation($latitude, $longitude, $radius)
+    private function fallbackLocalCalculation($latitude, $longitude, $radius, $warehouseLat, $warehouseLng)
     {
-        $warehouseLat = 14.5995;
-        $warehouseLng = 120.9842;
-
         $earthRadius = 6371000; // meters
 
         $dLat = deg2rad($latitude - $warehouseLat);
         $dLng = deg2rad($longitude - $warehouseLng);
 
-        $a = sin($dLat / 2) * sin($dLat / 2) +
+        $a = sin($dLat / 2) ** 2 +
              cos(deg2rad($warehouseLat)) * cos(deg2rad($latitude)) *
-             sin($dLng / 2) * sin($dLng / 2);
+             sin($dLng / 2) ** 2;
 
         $c = 2 * atan2(sqrt($a), sqrt(1 - $a));
         $distance = $earthRadius * $c;
@@ -82,6 +85,13 @@ class ProximityAlertController extends Controller
             'within_range' => $withinRange,
         ]);
 
-        return view('dashboard.alerts', ['proximityCheck' => $log]);
+        return view('dashboard.alerts', [
+            'proximityCheck' => $log,
+            'warehouseLat' => $warehouseLat,
+            'warehouseLng' => $warehouseLng,
+            'deliveryLat' => $latitude,
+            'deliveryLng' => $longitude,
+            'radius' => $radius
+        ]);
     }
 }

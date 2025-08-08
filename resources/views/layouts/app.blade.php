@@ -18,7 +18,7 @@
         #map {
             height: 300px;
             width: 100%;
-            border-radius: 0.5rem;
+            border-radius: 0;
             margin-bottom: 1.5rem;
         }
 
@@ -68,8 +68,27 @@
 </head>
 <body class="bg-[#264653] text-white min-h-screen">
 
+    <!-- Navbar -->
+    <nav class="bg-[#1b3a4b] shadow-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo / Brand -->
+                <a href="{{ url('/') }}" class="text-lg font-bold text-white hover:text-green-400">
+                    Logistics Dashboard
+                </a>
+
+                <!-- Menu Links -->
+                <div class="hidden md:flex space-x-6">
+                    <a href="{{ url('/') }}" class="hover:text-green-400">Home</a>
+                    <a href="{{ route('proximity.form') }}" class="hover:text-green-400">Check Proximity</a>
+                    <a href="{{ url('/reports') }}" class="hover:text-green-400">Proximity History</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
     <!-- Main Content -->
-    <main class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+    <main class="w-full">
         @yield('content')
     </main>
 

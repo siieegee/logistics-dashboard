@@ -13,11 +13,13 @@
 </div>
 
 {{-- FORM + MAP SECTION --}}
-<div id="check" class="bg-[#264653] pb-12 px-4">
-    <div class="flex flex-col md:flex-row gap-8 justify-center items-start">
+<div id="check" class="bg-[#264653] pb-12">
+    <div class="flex flex-col md:flex-row justify-center items-stretch w-full">
+        {{-- Removed gap-8 here --}}
+
         {{-- FORM --}}
         <form method="POST" action="{{ route('check.proximity') }}"
-              class="bg-[#3a5a40] p-6 md:p-8 rounded-lg shadow-lg w-full max-w-md">
+              class="bg-[#3a5a40] p-6 md:p-8 shadow-lg w-full max-w-sm mx-0">
             @csrf
             <h2 class="text-white text-2xl font-bold mb-6 text-center">Check Delivery Proximity</h2>
 
@@ -65,10 +67,28 @@
         </form>
 
         {{-- MAP --}}
-        <div class="w-full md:w-1/2">
+        <div class="w-full md:w-1/2 md:pr-0 md:pl-0 flex-grow">
             @include('components.map')
         </div>
     </div>
+</div>
+
+{{-- INSTRUCTIONS --}}
+<div class="bg-[#264653] flex items-center justify-center py-5 px-4 mb-10 min-h-[300px]">
+  <div class="bg-[#264653] rounded-lg max-w-4xl mx-auto p-6 text-left text-white">
+    <h2 class="text-xl font-bold mb-4">How to Use</h2>
+    <ol class="list-decimal list-inside text-sm md:text-base space-y-2">
+      <li>Enter the delivery location's <strong>latitude</strong> and <strong>longitude</strong> in the fields provided.</li>
+      <li>Select your preferred <strong>alert radius</strong> (in meters).</li>
+      <li>Click <strong>Check Proximity</strong> to see if the delivery is within the set range.</li>
+      <li>The result will be shown above the form, with:
+        <ul class="list-disc list-inside ml-6 mt-1">
+          <li class="text-green-400">Green if within range ✅</li>
+          <li class="text-red-400">Red if outside range ⚠️</li>
+        </ul>
+      </li>
+    </ol>
+  </div>
 </div>
 
 @endsection
