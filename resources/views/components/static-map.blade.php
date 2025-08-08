@@ -1,6 +1,4 @@
-<div class="mb-4">
-    <div id="map" style="height: 450px;"></div>
-</div>
+<div id="map" style="width: 100%; height: 100vh; min-height: 450px;"></div>
 
 @push('scripts')
 <script>
@@ -11,16 +9,31 @@
     var deliveryLng = Number("{{ $deliveryLng ?? 0 }}");
     var radius = Number("{{ $radius ?? 500 }}"); // meters
 
-
-    const map = L.map('map').setView([warehouseLat, warehouseLng], 15);
+    const map = L.map('map').setView([warehouseLat, warehouseLng], 16);
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 18,
         attribution: '© OpenStreetMap'
     }).addTo(map);
 
-    // Always show warehouse
-    L.marker([warehouseLat, warehouseLng])
+    // Define warehouse icon
+    const warehouseIcon = L.icon({
+        iconUrl: '{{ asset("images/warehouse.png") }}',
+        iconSize:     [40, 40],
+        iconAnchor:   [20, 40],
+        popupAnchor:  [0, -40]
+    });
+
+    // Define delivery icon
+    const deliveryIcon = L.icon({
+        iconUrl: '{{ asset("images/delivery.png") }}',
+        iconSize:     [40, 40],
+        iconAnchor:   [20, 40],
+        popupAnchor:  [0, -40]
+    });
+
+    // Add warehouse marker with custom icon
+    L.marker([warehouseLat, warehouseLng], { icon: warehouseIcon })
         .addTo(map)
         .bindPopup('Warehouse Location')
         .openPopup();
@@ -28,10 +41,9 @@
     // Default circle color
     let circleColor = 'green';
 
-    // If delivery coordinates exist
+    // Add delivery marker with custom icon if coordinates exist
     if (deliveryLat && deliveryLng) {
-        // Add delivery marker
-        L.marker([deliveryLat, deliveryLng])
+        L.marker([deliveryLat, deliveryLng], { icon: deliveryIcon })
             .addTo(map)
             .bindPopup('Delivery Location');
 

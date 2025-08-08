@@ -12,3 +12,6 @@ Route::get('/proximity-form', function () {
 })->name('proximity.form');
 
 Route::post('/check-proximity', [ProximityAlertController::class, 'checkProximity'])->name('check.proximity');
+
+Route::get('/logs', [ProximityAlertController::class, 'showLogs'])->name('logs.index');
+

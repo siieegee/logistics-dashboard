@@ -94,4 +94,11 @@ class ProximityAlertController extends Controller
             'radius' => $radius
         ]);
     }
+
+    public function showLogs()
+    {
+        $logs = Log::orderBy('created_at', 'desc')->paginate(20);
+
+        return view('dashboard.logs', compact('logs'));
+    }
 }

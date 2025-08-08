@@ -81,7 +81,7 @@
                 <div class="hidden md:flex space-x-6">
                     <a href="{{ url('/') }}" class="hover:text-green-400">Home</a>
                     <a href="{{ route('proximity.form') }}" class="hover:text-green-400">Check Proximity</a>
-                    <a href="{{ url('/reports') }}" class="hover:text-green-400">Proximity History</a>
+                    <a href="{{ route('logs.index') }}" class="hover:text-green-400">Proximity History</a>
                 </div>
             </div>
         </div>

@@ -2,93 +2,133 @@
 
 @section('content')
 
-{{-- HERO TEXT ABOVE FORM --}}
-<div class="bg-[#264653] py-12 px-4 text-center">
-    <h1 class="text-2xl md:text-4xl font-extrabold text-white leading-tight mb-4">
-        AI-Powered <span style="color: #6a994e;">Proximity Alerts</span> for Warehouse Deliveries
-    </h1>
-    <p class="text-sm md:text-base text-gray-200 mb-6 max-w-2xl mx-auto">
-        Ensure timely and accurate drop-offs with our smart logistics proximity detection system.
-    </p>
-</div>
+@include('components.hero')
 
-{{-- FORM + MAP SECTION --}}
-<div id="check" class="bg-[#264653] pb-12">
-    <div class="flex flex-col md:flex-row justify-center items-stretch w-full">
-        {{-- Removed gap-8 here --}}
+{{-- MAIN CONTENT SECTION --}}
+<div id="check" class="bg-gradient-to-b from-[#264653] to-[#1e3a44] py-16">
+    <div class="max-w-7xl mx-auto px-4">
+        <div class="grid lg:grid-cols-2 gap-8 lg:gap-12 items-start">
 
-        {{-- FORM --}}
-        <form method="POST" action="{{ route('check.proximity') }}"
-            class="bg-[#3a5a40] p-6 md:p-8 shadow-lg w-full max-w-sm mx-0">
-            @csrf
-            <h2 class="text-white text-2xl font-bold mb-6 text-center">Check Delivery Proximity</h2>
+            {{-- FORM SECTION --}}
+            <div class="order-2 lg:order-1">
+                <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-8 shadow-2xl border border-white/20">
+                    <div class="text-center mb-8">
+                        <div class="w-16 h-16 bg-[#6a994e] rounded-full flex items-center justify-center mx-auto mb-4">
+                            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                            </svg>
+                        </div>
+                        <h2 class="text-white text-2xl md:text-3xl font-bold">Check Delivery Proximity</h2>
+                        <p class="text-gray-200 mt-2">Enter coordinates to verify delivery location</p>
+                    </div>
 
-            {{-- Show result alert if available --}}
-            @isset($proximityCheck)
-                @if ($proximityCheck->within_range)
-                    <p class="text-green-400 font-semibold mb-4">
-                        ✅ Delivery is within {{ $proximityCheck->distance }} meters!
-                    </p>
-                @else
-                    <p class="text-red-400 font-semibold mb-4">
-                        ⚠️ Delivery is {{ $proximityCheck->distance }} meters away.
-                    </p>
-                @endif
-            @endisset
+                    @isset($proximityCheck)
+                        <div class="mb-6 p-4 rounded-lg border-l-4 {{ $proximityCheck->within_range ? 'bg-green-500/20 border-green-400 text-green-100' : 'bg-red-500/20 border-red-400 text-red-100' }}">
+                            <div class="flex items-center">
+                                <div class="flex-shrink-0">
+                                    @if ($proximityCheck->within_range)
+                                        <svg class="w-6 h-6 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                        </svg>
+                                    @else
+                                        <svg class="w-6 h-6 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                        </svg>
+                                    @endif
+                                </div>
+                                <div class="ml-3">
+                                    <p class="font-semibold">
+                                        @if ($proximityCheck->within_range)
+                                            Delivery is within range!
+                                        @else
+                                            Delivery is outside the set radius
+                                        @endif
+                                    </p>
+                                    <p class="text-sm mt-1">Distance: {{ number_format($proximityCheck->distance, 1) }} meters</p>
+                                </div>
+                            </div>
+                        </div>
+                    @endisset
 
-            <div class="mb-4">
-                <label class="block text-white font-semibold mb-1" for="latitude">Delivery Latitude:</label>
-                <input type="text" id="latitude" name="latitude"
-                    class="w-full px-4 py-2 rounded-md border border-[#588157] bg-[#588157] text-white placeholder-white focus:outline-none focus:ring-2 focus:ring-white">
+                    <form method="POST" action="{{ route('check.proximity') }}" class="space-y-6">
+                        @csrf
+                        
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div class="space-y-2">
+                                <label class="block text-white font-semibold text-sm" for="latitude">
+                                    Delivery Latitude
+                                </label>
+                                <input type="text" id="latitude" name="latitude"
+                                    class="w-full px-4 py-3 rounded-lg bg-white/10 border border-white/30 text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-[#6a994e] focus:border-transparent transition duration-200"
+                                    placeholder="e.g., 14.5995">
+                            </div>
+
+                            <div class="space-y-2">
+                                <label class="block text-white font-semibold text-sm" for="longitude">
+                                    Longitude
+                                </label>
+                                <input type="text" id="longitude" name="longitude"
+                                    class="w-full px-4 py-3 rounded-lg bg-white/10 border border-white/30 text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-[#6a994e] focus:border-transparent transition duration-200"
+                                    placeholder="e.g., 121.0437">
+                            </div>
+                        </div>
+
+                        <div class="space-y-2">
+                            <label class="block text-white font-semibold text-sm" for="radius">
+                                Alert Radius
+                            </label>
+                            <div class="relative">
+                                <select id="radius" name="radius"
+                                    class="w-full px-4 py-3 rounded-lg bg-white/10 border border-white/30 text-white 
+                                            focus:outline-none focus:ring-2 focus:ring-[#6a994e] focus:border-transparent 
+                                            transition duration-200
+                                            appearance-none
+                                            [&>option]:bg-[#264653] [&>option]:text-white
+                                            ">
+                                    <option value="100">100 meters</option>
+                                    <option value="250" selected>250 meters</option>
+                                    <option value="500">500 meters</option>
+                                </select>
+                                <div class="pointer-events-none absolute inset-y-0 right-3 flex items-center">
+                                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" stroke-width="2" 
+                                        stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                                        <path d="M6 9l6 6 6-6" />
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="submit"
+                                class="w-full bg-gradient-to-r from-[#6a994e] to-[#588c43] hover:from-[#588c43] hover:to-[#4a7c39] text-white font-bold py-3 px-6 rounded-lg transition duration-300 transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-white/50 shadow-lg">
+                            <span class="flex items-center justify-center">
+                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                                </svg>
+                                Check Proximity
+                            </span>
+                        </button>
+                    </form>
+                </div>
             </div>
 
-            <div class="mb-4">
-                <label class="block text-white font-semibold mb-1" for="longitude">Longitude:</label>
-                <input type="text" id="longitude" name="longitude"
-                    class="w-full px-4 py-2 rounded-md border border-[#588157] bg-[#588157] text-white placeholder-white focus:outline-none focus:ring-2 focus:ring-white">
+            {{-- MAP SECTION --}}
+            <div class="order-1 lg:order-2">
+                <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-6 shadow-2xl border border-white/20">
+                    <div class="mb-4">
+                        <h3 class="text-white text-xl font-semibold mb-2">Interactive Map</h3>
+                        <p class="text-gray-200 text-sm">Click on the map to select coordinates</p>
+                    </div>
+                    <div class="rounded-lg overflow-hidden shadow-lg">
+                        @include('components.map')
+                    </div>
+                </div>
             </div>
-
-            <div class="mb-6">
-                <label class="block text-white font-semibold mb-1" for="radius">Alert Radius (m):</label>
-                <select id="radius" name="radius"
-                        class="w-full px-4 py-2 rounded-md border border-[#588157] bg-[#588157] text-white focus:outline-none focus:ring-2 focus:ring-white">
-                    <option value="100">100m</option>
-                    <option value="250" selected>250m</option>
-                    <option value="500">500m</option>
-                </select>
-            </div>
-
-            <div class="flex justify-center">
-                <button type="submit"
-                        class="bg-[#6a994e] hover:bg-[#588c43] text-white font-semibold px-6 py-2 rounded-md transition duration-300">
-                    Check Proximity
-                </button>
-            </div>
-        </form>
-
-        {{-- MAP --}}
-        <div class="w-full md:w-1/2 md:pr-0 md:pl-0 flex-grow">
-            @include('components.map')
         </div>
     </div>
 </div>
 
-{{-- INSTRUCTIONS --}}
-<div class="bg-[#264653] flex items-center justify-center py-5 px-4 mb-10 min-h-[300px]">
-    <div class="bg-[#264653] rounded-lg max-w-4xl mx-auto p-6 text-left text-white">
-        <h2 class="text-xl font-bold mb-4">How to Use</h2>
-        <ol class="list-decimal list-inside text-sm md:text-base space-y-2">
-            <li>Enter the delivery location's <strong>latitude</strong> and <strong>longitude</strong> in the fields provided or choose a location on the map.</li>
-            <li>Select your preferred <strong>alert radius</strong> (in meters).</li>
-            <li>Click <strong>Check Proximity</strong> to see if the delivery is within the set range.</li>
-            <li>The result will be shown with:
-            <ul class="list-disc list-inside ml-6 mt-1">
-            <li class="text-green-400">Green if within range ✅</li>
-            <li class="text-red-400">Red if outside range ⚠️</li>
-            </ul>
-            </li>
-        </ol>
-    </div>
-</div>
+{{-- INSTRUCTIONS SECTION --}}
+@include('components.instructions')
 
 @endsection

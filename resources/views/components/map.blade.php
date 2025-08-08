@@ -1,4 +1,4 @@
-<div id="map" style="width: 100%; height: 100%; min-height: 450px; "></div>
+<div id="map" style="width: 100%; height: 100%; min-height: 450px;"></div>
 
 @push('scripts')
 <script>
@@ -9,8 +9,25 @@
         attribution: '© OpenStreetMap'
     }).addTo(map);
 
-    // Static warehouse pin
-    const warehouseMarker = L.marker([14.5995, 120.9842]).addTo(map)
+    // Warehouse icon
+    const warehouseIcon = L.icon({
+        iconUrl: '{{ asset("images/warehouse.png") }}',
+        iconSize:     [40, 40],
+        iconAnchor:   [20, 40],
+        popupAnchor:  [0, -40]
+    });
+
+    // Delivery icon
+    const deliveryIcon = L.icon({
+        iconUrl: '{{ asset("images/delivery.png") }}',  // Make sure you have this image in public/images/
+        iconSize:     [40, 40],
+        iconAnchor:   [20, 40],
+        popupAnchor:  [0, -40]
+    });
+
+    // Add warehouse marker with custom icon
+    const warehouseMarker = L.marker([14.5995, 120.9842], { icon: warehouseIcon })
+        .addTo(map)
         .bindPopup('Warehouse Location')
         .openPopup();
 
@@ -26,7 +43,7 @@
         if (deliveryMarker) {
             deliveryMarker.setLatLng(e.latlng);
         } else {
-            deliveryMarker = L.marker(e.latlng).addTo(map)
+            deliveryMarker = L.marker(e.latlng, { icon: deliveryIcon }).addTo(map)
                 .bindPopup("Delivery Location")
                 .openPopup();
         }
