@@ -19,7 +19,7 @@
 
         {{-- FORM --}}
         <form method="POST" action="{{ route('check.proximity') }}"
-              class="bg-[#3a5a40] p-6 md:p-8 shadow-lg w-full max-w-sm mx-0">
+            class="bg-[#3a5a40] p-6 md:p-8 shadow-lg w-full max-w-sm mx-0">
             @csrf
             <h2 class="text-white text-2xl font-bold mb-6 text-center">Check Delivery Proximity</h2>
 
@@ -39,13 +39,13 @@
             <div class="mb-4">
                 <label class="block text-white font-semibold mb-1" for="latitude">Delivery Latitude:</label>
                 <input type="text" id="latitude" name="latitude"
-                       class="w-full px-4 py-2 rounded-md border border-[#588157] bg-[#588157] text-white placeholder-white focus:outline-none focus:ring-2 focus:ring-white">
+                    class="w-full px-4 py-2 rounded-md border border-[#588157] bg-[#588157] text-white placeholder-white focus:outline-none focus:ring-2 focus:ring-white">
             </div>
 
             <div class="mb-4">
                 <label class="block text-white font-semibold mb-1" for="longitude">Longitude:</label>
                 <input type="text" id="longitude" name="longitude"
-                       class="w-full px-4 py-2 rounded-md border border-[#588157] bg-[#588157] text-white placeholder-white focus:outline-none focus:ring-2 focus:ring-white">
+                    class="w-full px-4 py-2 rounded-md border border-[#588157] bg-[#588157] text-white placeholder-white focus:outline-none focus:ring-2 focus:ring-white">
             </div>
 
             <div class="mb-6">
@@ -75,20 +75,20 @@
 
 {{-- INSTRUCTIONS --}}
 <div class="bg-[#264653] flex items-center justify-center py-5 px-4 mb-10 min-h-[300px]">
-  <div class="bg-[#264653] rounded-lg max-w-4xl mx-auto p-6 text-left text-white">
-    <h2 class="text-xl font-bold mb-4">How to Use</h2>
-    <ol class="list-decimal list-inside text-sm md:text-base space-y-2">
-      <li>Enter the delivery location's <strong>latitude</strong> and <strong>longitude</strong> in the fields provided or choose a location on the map.</li>
-      <li>Select your preferred <strong>alert radius</strong> (in meters).</li>
-      <li>Click <strong>Check Proximity</strong> to see if the delivery is within the set range.</li>
-      <li>The result will be shown with:
-        <ul class="list-disc list-inside ml-6 mt-1">
-          <li class="text-green-400">Green if within range ✅</li>
-          <li class="text-red-400">Red if outside range ⚠️</li>
-        </ul>
-      </li>
-    </ol>
-  </div>
+    <div class="bg-[#264653] rounded-lg max-w-4xl mx-auto p-6 text-left text-white">
+        <h2 class="text-xl font-bold mb-4">How to Use</h2>
+        <ol class="list-decimal list-inside text-sm md:text-base space-y-2">
+            <li>Enter the delivery location's <strong>latitude</strong> and <strong>longitude</strong> in the fields provided or choose a location on the map.</li>
+            <li>Select your preferred <strong>alert radius</strong> (in meters).</li>
+            <li>Click <strong>Check Proximity</strong> to see if the delivery is within the set range.</li>
+            <li>The result will be shown with:
+            <ul class="list-disc list-inside ml-6 mt-1">
+            <li class="text-green-400">Green if within range ✅</li>
+            <li class="text-red-400">Red if outside range ⚠️</li>
+            </ul>
+            </li>
+        </ol>
+    </div>
 </div>
 
 @endsection

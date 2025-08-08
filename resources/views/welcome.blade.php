@@ -14,8 +14,8 @@
         </p>
         <div class="flex justify-center w-full md:justify-start">
             <a href="{{ route('proximity.form') }}"
-               class="inline-block text-white font-semibold px-6 py-3 rounded-lg shadow-md transition duration-300"
-               style="background-color: #6a994e;">
+                class="inline-block text-white font-semibold px-6 py-3 rounded-lg shadow-md transition duration-300"
+                style="background-color: #6a994e;">
                 Check Proximity
             </a>
         </div>
@@ -24,8 +24,8 @@
     <!-- Right Icon -->
     <div class="md:w-1/2 flex items-center justify-center mt-8 md:mt-0">
         <img src="https://cdn-icons-png.flaticon.com/512/6756/6756142.png"
-             alt="Warehouse Delivery Icon"
-             class="w-full max-w-[300px] md:max-w-[400px]">
+            alt="Warehouse Delivery Icon"
+            class="w-full max-w-[300px] md:max-w-[400px]">
     </div>
 </div>
 @endsection
